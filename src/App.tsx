@@ -3,11 +3,11 @@ import './App.css'
 import Board from './Board';
 
 const devMode=import.meta.env.MODE==='development'
-const url0=devMode ? 'http://127.0.0.1:8000/' : `${window.location.origin}/`;
+const url0=devMode ? 'http://127.0.0.1:8000/' : 'https://cchecker-backend.onrender.com/';
 const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
 const url0ws = devMode 
     ? 'ws://127.0.0.1:8000/' 
-    : `${protocol}${window.location.host}/`;
+    : `${protocol}cchecker-backend.onrender.com/`;
 
 interface ModelScore {
     id: number;
