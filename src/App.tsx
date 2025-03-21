@@ -3,11 +3,13 @@ import './App.css'
 import Board from './Board';
 
 const devMode=import.meta.env.MODE==='development'
-const url0=devMode ? 'http://127.0.0.1:8000/' : 'https://cchecker-backend.onrender.com/';
-const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+const urlBackend='cchecker-backend-docker.onrender.com/'
+const url0=devMode ? 'http://127.0.0.1:8000/' : `https://${urlBackend}`;
+// const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+const protocol='wss://'
 const url0ws = devMode 
     ? 'ws://127.0.0.1:8000/' 
-    : `${protocol}cchecker-backend.onrender.com/`;
+    : `${protocol}${urlBackend}`;
 
 interface ModelScore {
     id: number;
