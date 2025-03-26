@@ -10,7 +10,7 @@ if (window.location.hostname === 'cchecker-frontend.onrender.com') {
 } else {
     urlBackend = 'https://cchecker-backend-docker.onrender.com/';
 }
-const url0=devMode ? 'http://127.0.0.1:8000/' : `https://${urlBackend}`;
+const url0=devMode ? 'http://127.0.0.1:8000/' : urlBackend;
 // const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
 const protocol='wss://'
 const url0ws = devMode 
