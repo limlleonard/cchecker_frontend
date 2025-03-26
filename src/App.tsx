@@ -6,7 +6,7 @@ const devMode=import.meta.env.MODE==='development'
 // const urlBackend='cchecker-backend.onrender.com/'
 let urlBackend = '';
 if (window.location.hostname === 'cchecker-frontend.onrender.com') {
-    urlBackend = 'cchecker-frontend.onrender.com/';
+    urlBackend = 'cchecker-backend.onrender.com/';
 } else {
     urlBackend = 'cchecker-backend-docker.onrender.com/';
 }
