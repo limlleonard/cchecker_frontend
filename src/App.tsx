@@ -6,16 +6,15 @@ const devMode=import.meta.env.MODE==='development'
 // const urlBackend='cchecker-backend.onrender.com/'
 let urlBackend = '';
 if (window.location.hostname === 'cchecker-frontend.onrender.com') {
-    urlBackend = 'https://cchecker-frontend.onrender.com/';
+    urlBackend = 'cchecker-frontend.onrender.com/';
 } else {
-    urlBackend = 'https://cchecker-backend-docker.onrender.com/';
+    urlBackend = 'cchecker-backend-docker.onrender.com/';
 }
-const url0=devMode ? 'http://127.0.0.1:8000/' : urlBackend;
+const url0=devMode ? 'http://127.0.0.1:8000/' : `https://${urlBackend}`;
 // const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
-const protocol='wss://'
 const url0ws = devMode 
     ? 'ws://127.0.0.1:8000/' 
-    : `${protocol}${urlBackend}`;
+    : `wss://${urlBackend}`;
 
 interface ModelScore {
     id: number;
