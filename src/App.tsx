@@ -218,7 +218,7 @@ function App() {
 				},
 			});
 			const data = await response.json();
-			alert(`Room taken: ${data.lst_roomnr}. State saved: ${data.lst_roomnr_db}.`)
+			alert(`Room taken: ${data.lst_roomnr_taken}. State saved: ${data.lst_roomnr_saved}.`)
 		} catch (err) {
 			console.error("Error by reloading state:", err);
 		}
