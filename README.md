@@ -1,6 +1,6 @@
 # Chinese Checker Frontend
 ## Description
-[Link to play the game](https://sternhalma.onrender.com)
+[Link to play the game](https://cchecker-frontend.onrender.com/)
 
 [Link to backend](https://github.com/limlleonard/cchecker_backend)
 
