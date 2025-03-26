@@ -290,7 +290,7 @@ function App() {
 		<>
 		<div className="ctn0">
 			<section className="side-bar">
-				<h1>Sternhalma</h1>
+				<h1>Chinese Checker</h1>
 				<div className="ctn-select">
 					<label htmlFor="nrPlayer">Nr of players: </label>
 					<select name="nrPlayer" id="nrPlayer" onChange={handleSelect} value={nrPlayer}>
@@ -319,7 +319,7 @@ function App() {
 				{/* <p>Timer: <span id="timer" ref={timerRef}>{formatTime(seconds)}</span></p>
 				<p>Number of moves: <span id="nrMoves">{nrMoves}</span></p> */}
 				<p>Player in turn: <span className={`circleSmall farbe${order}`}></span></p>
-				<a href="https://github.com/limlleonard/sternhalma" target="_blank">Link to source code</a>
+				<a href="https://github.com/limlleonard/cchecker_frontend" target="_blank">Link to source code</a>
 				<br />
 				<button onClick={test1}>Test1</button>
 
