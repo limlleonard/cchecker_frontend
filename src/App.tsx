@@ -2,19 +2,19 @@ import { useEffect, useState } from "react"; // useRef
 import './App.css'
 import Board from './Board';
 
-const devMode=import.meta.env.MODE==='development'
-// const urlBackend='cchecker-backend.onrender.com/'
-let urlBackend = '';
-if (window.location.hostname === 'cchecker-frontend.onrender.com') {
-    urlBackend = 'cchecker-backend.onrender.com/';
-} else {
-    urlBackend = 'cchecker-backend-docker.onrender.com/';
-}
-const url0=devMode ? 'http://127.0.0.1:8000/' : `https://${urlBackend}`;
-// const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
-const url0ws = devMode 
-    ? 'ws://127.0.0.1:8000/' 
-    : `wss://${urlBackend}`;
+// const devMode=import.meta.env.MODE==='development'
+let url0 = '';
+let url0ws='';
+if (window.location.protocol === 'http:') {
+    url0 = 'http://127.0.0.1:8000/'
+	url0ws = 'ws://127.0.0.1:8000/'
+} else if (window.location.hostname === 'cchecker-frontend.onrender.com') {
+    url0 = 'https://cchecker-backend.onrender.com/';
+    url0ws = 'wss://cchecker-backend.onrender.com/';
+} else if (window.location.hostname === 'cchecker-frontend-docker.onrender.com') {
+    url0 = 'https://cchecker-backend-docker.onrender.com/';
+    url0ws = 'wss://cchecker-backend-docker.onrender.com/';
+} else { alert("unknown host") }
 
 interface ModelScore {
     id: number;
