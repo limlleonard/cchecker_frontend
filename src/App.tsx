@@ -3,7 +3,13 @@ import './App.css'
 import Board from './Board';
 
 const devMode=import.meta.env.MODE==='development'
-const urlBackend='cchecker-backend.onrender.com/'
+// const urlBackend='cchecker-backend.onrender.com/'
+let urlBackend = '';
+if (window.location.hostname === 'cchecker-frontend.onrender.com') {
+    urlBackend = 'https://cchecker-frontend.onrender.com/';
+} else {
+    urlBackend = 'https://cchecker-backend-docker.onrender.com/';
+}
 const url0=devMode ? 'http://127.0.0.1:8000/' : `https://${urlBackend}`;
 // const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
 const protocol='wss://'
@@ -204,13 +210,9 @@ function App() {
             }
         }
     };
-	const test1 = async () => {
-		// const score = parseInt(prompt('Enter a new score:') || '', 10);
-		// if (!isNaN(score)) {
-		// 	handleNewScore(score);
-		// }
+	const roomInfo = async () => {
 		try {
-			const response = await fetch(`${url0}backend_info/`, {
+			const response = await fetch(`${url0}room_info/`, {
 				method: "GET",
 				credentials: "include",
 				headers: {
@@ -222,6 +224,13 @@ function App() {
 		} catch (err) {
 			console.error("Error by reloading state:", err);
 		}
+	}
+	const test1 = async () => {
+		// const score = parseInt(prompt('Enter a new score:') || '', 10);
+		// if (!isNaN(score)) {
+		// 	handleNewScore(score);
+		// }
+		alert("Du bist aber neugierig ;)")
 	}
 	const handleBoardClick = async (coords: { x: number; y: number }) => {
 		if (!aktiv) return 
@@ -315,6 +324,7 @@ function App() {
 					<button onClick={reset} title="Reset the game">Reset</button>
 					<button onClick={saveState} title="Save the game with the room number">Save</button>
 					<button onClick={reloadState} title="Reload the saved game with the room number">Reload</button>
+					<button onClick={roomInfo} title="Get room information from the backend">Room Info</button>
 				</div>
 				{/* <p>Timer: <span id="timer" ref={timerRef}>{formatTime(seconds)}</span></p>
 				<p>Number of moves: <span id="nrMoves">{nrMoves}</span></p> */}
