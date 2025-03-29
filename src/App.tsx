@@ -31,7 +31,7 @@ function App() {
 	const [arrCircle, setArrCircle] = useState<[number,number][]>([]);
 	const [aaFigur, setAAFigur] = useState<[number,number][][]>([]); // array of array of figur
 	const [arrValid, setArrValid] = useState<[number,number][]>([]);
-	const [order, setOrder] = useState<number>(0);
+	const [turnwise, setTurnwise] = useState<number>(0);
 	const [nrPlayer, setNrPlayer] = useState<number>(1);
     const [bestList, setBestList] = useState<ModelScore[]>([]);
 	const [aktiv, setAktiv] = useState<boolean>(false); // if a game is running
@@ -86,7 +86,7 @@ function App() {
 				alert(`No game is saved for the room number ${roomnr}. Please create a new one by clicking Start`)
 			} else {
 				setAAFigur(data.ll_piece);
-				setOrder(data.turnwise);
+				setTurnwise(data.turnwise);
 				setAktiv(true);
 				// also update selected and available pos incase someone stop if after selecting piece
 			}
@@ -100,7 +100,7 @@ function App() {
 		// setTimerInterval(null);
 		// setSeconds(0);
 		setMovenr(0);
-		setOrder(0);
+		setTurnwise(0);
 
 		initBoard1();
 		setSelected(null);
@@ -131,10 +131,11 @@ function App() {
 				body: JSON.stringify({ direction, roomnr, movenr}),
 			});
 			const data = await response.json();
-			alert(data.ok)
-			// if (!data.ok) console.log("Error by reset");
+			if (data.moved) {
+				if (wsGame1) wsGame1.send(JSON.stringify(data));
+			}
 		} catch (err) {
-			console.error("Error reset:", err);
+			console.error("Error ward:", err);
 		}
 		// const tempRoomnr:number=Math.floor(Math.random() * 100);
 		// setRoomnrShow(tempRoomnr.toString());
@@ -238,7 +239,7 @@ function App() {
 				headers: {
 					"Content-Type": "application/json",
 				},
-				body: JSON.stringify({ xr, yr, roomnr, movenr }),
+				body: JSON.stringify({ xr, yr, roomnr }),
 			});
 			const data = await response.json();
 			if (wsGame1) wsGame1.send(JSON.stringify(data));
@@ -274,11 +275,11 @@ function App() {
 				setSelected([data.selected[0], data.selected[1]]);
 			}
 			setArrValid(data.valid_pos);
-			if (data.current_piece) {
-				setAAFigur(data.current_piece)
+			if (data.ll_piece) {
+				setAAFigur(data.ll_piece)
 				// setMovenr((prev) => prev+1);
 				setMovenr(data.movenr)
-				setOrder(data.turnwise)
+				setTurnwise(data.turnwise)
 				if (data.gewonnen) {
 					handleNewScore(movenr)
 					setAktiv(false)
@@ -326,7 +327,7 @@ function App() {
 				</div>
 				{/* <p>Timer: <span id="timer" ref={timerRef}>{formatTime(seconds)}</span></p> */}
 				<p>Number of moves: <span id="nrMoves">{movenr}</span></p>
-				<p>Player in turn: <span className={`circleSmall farbe${order}`}></span></p>
+				<p>Player in turn: <span className={`circleSmall farbe${turnwise}`}></span></p>
 				<a href="https://github.com/limlleonard/cchecker_frontend" target="_blank">Link to source code</a>
 				<br />
 				<button onClick={test1}>Test1</button>
@@ -337,7 +338,7 @@ function App() {
 				aaFigur={aaFigur}
 				arrValid={arrValid}
 				selected={selected}
-				order={order}
+				order={turnwise}
 				onBoardClick={handleBoardClick}
 			/>
 		</div>
