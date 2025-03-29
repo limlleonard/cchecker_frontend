@@ -24,7 +24,7 @@ interface ModelScore {
 function App() {
 	// const [count, setCount] = useState(0)
 	// const timerRef = useRef<HTMLDivElement>(null);
-	const [nrMoves, setNrMoves] = useState(0);
+	const [movenr, setMovenr] = useState(0);
 	// const [seconds, setSeconds] = useState(0);
 	// const [timerInterval, setTimerInterval] = useState<number | null>(null);
 	const [selected, setSelected] = useState<[number, number] | null>(null);
@@ -72,24 +72,7 @@ function App() {
 			console.error("Error starten:", err);
 		}
 	};
-	const saveState = async () => {
-		try {
-			const response = await fetch(`${url0}save_state/`, {
-				method: "POST",
-				credentials: "include",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({ roomnr }),
-			});
-			const data = await response.json();
-			alert(data.message); // Show popup with response message
-
-		} catch (err) {
-			console.error("Error saving state:", err);
-		}
-	};
-	const reloadState = async () => {
+	const loadJoin = async () => {
 		try {
 			const response = await fetch(`${url0}reload_state/?roomnr=${roomnr}`, {
 				method: "GET",
@@ -100,15 +83,12 @@ function App() {
 			});
 			const data = await response.json();
 			if (!data.exist) {
-				alert(`No game is saved for the room number ${roomnr}`)
+				alert(`No game is saved for the room number ${roomnr}. Please create a new one by clicking Start`)
 			} else {
-				if (data.taken) {
-					alert(`The room ${roomnr} is taken`)
-				} else {
-					setAAFigur(data.ll_piece);
-					setOrder(data.order);
-					setAktiv(true);
-				}
+				setAAFigur(data.ll_piece);
+				setOrder(data.turnwise);
+				setAktiv(true);
+				// also update selected and available pos incase someone stop if after selecting piece
 			}
 			initSocket();
 		} catch (err) {
@@ -119,7 +99,7 @@ function App() {
 		// if (timerInterval) clearInterval(timerInterval);
 		// setTimerInterval(null);
 		// setSeconds(0);
-		// setNrMoves(0);
+		setMovenr(0);
 		setOrder(0);
 
 		initBoard1();
@@ -142,6 +122,23 @@ function App() {
 		setRoomnrShow(tempRoomnr.toString());
 		setRoomnr(tempRoomnr);
 		// run a random for roomnr, delete the old instance in dct_game in backend
+	};
+	const ward = async (direction:boolean) => {
+		try {
+			const response = await fetch(`${url0}ward/`, {
+				method: "POST",
+				headers: {"Content-Type": "application/json",},
+				body: JSON.stringify({ direction, roomnr, movenr}),
+			});
+			const data = await response.json();
+			alert(data.ok)
+			// if (!data.ok) console.log("Error by reset");
+		} catch (err) {
+			console.error("Error reset:", err);
+		}
+		// const tempRoomnr:number=Math.floor(Math.random() * 100);
+		// setRoomnrShow(tempRoomnr.toString());
+		// setRoomnr(tempRoomnr);
 	};
 	const initBoard1 = async () => {
 		try {
@@ -219,7 +216,7 @@ function App() {
 				},
 			});
 			const data = await response.json();
-			alert(`Room taken: ${data.lst_roomnr_taken}. State saved: ${data.lst_roomnr_saved}.`)
+			alert(`Saved games: ${data.lst_roomnr}.`)
 		} catch (err) {
 			console.error("Error by reloading state:", err);
 		}
@@ -241,7 +238,7 @@ function App() {
 				headers: {
 					"Content-Type": "application/json",
 				},
-				body: JSON.stringify({ xr, yr, roomnr }),
+				body: JSON.stringify({ xr, yr, roomnr, movenr }),
 			});
 			const data = await response.json();
 			if (wsGame1) wsGame1.send(JSON.stringify(data));
@@ -273,16 +270,17 @@ function App() {
 		newWs.onmessage = (event) => {
 			const data = JSON.parse(event.data); // Convert JSON string to an object
 			setSelected(null);
-			if (data.selected) {
+			if (data.selected.length>0) {
 				setSelected([data.selected[0], data.selected[1]]);
 			}
-			setArrValid(data.validPos);
-			if (data.neueFiguren) {
-				setAAFigur(data.neueFiguren)
-				setNrMoves((prev) => prev+1);
-				setOrder(data.order)
+			setArrValid(data.valid_pos);
+			if (data.current_piece) {
+				setAAFigur(data.current_piece)
+				// setMovenr((prev) => prev+1);
+				setMovenr(data.movenr)
+				setOrder(data.turnwise)
 				if (data.gewonnen) {
-					handleNewScore(nrMoves)
+					handleNewScore(movenr)
 					setAktiv(false)
 				};
 			}
@@ -321,12 +319,13 @@ function App() {
 				<div id="ctn-btn">
 					<button onClick={starten} title="Start a new game">Start</button>
 					<button onClick={reset} title="Reset the game">Reset</button>
-					<button onClick={saveState} title="Save the game with the room number">Save</button>
-					<button onClick={reloadState} title="Reload the saved game with the room number">Reload</button>
+					<button onClick={loadJoin} title="Reload the saved game or join a game">Load / Join</button>
 					<button onClick={roomInfo} title="Get room information from the backend">Room Info</button>
+					<button onClick={()=>ward(false)} title="Backward">{"<<<"}</button>
+					<button onClick={()=>ward(true)} title="Forward">{">>>"}</button>
 				</div>
-				{/* <p>Timer: <span id="timer" ref={timerRef}>{formatTime(seconds)}</span></p>
-				<p>Number of moves: <span id="nrMoves">{nrMoves}</span></p> */}
+				{/* <p>Timer: <span id="timer" ref={timerRef}>{formatTime(seconds)}</span></p> */}
+				<p>Number of moves: <span id="nrMoves">{movenr}</span></p>
 				<p>Player in turn: <span className={`circleSmall farbe${order}`}></span></p>
 				<a href="https://github.com/limlleonard/cchecker_frontend" target="_blank">Link to source code</a>
 				<br />
@@ -347,26 +346,3 @@ function App() {
 }
 
 export default App
-
-// farben auswählen, feld farbe
-// Dynamic Refs Storage: useRef<{ [key: string]: CircleRef | null }> creates an object to hold references to all Circle components.
-// Assigning Refs: The ref prop is set using an inline function to dynamically store each Circle component by its key (x-y).
-// Accessing Specific Circle: The handleSetValid function takes coordinates and calls setValid(true) on the correct circle.
-
-// score list, one should not be able to click on the circles unless the game is started
-// test session, component reform for 4in1row, UI for invite code,
-// On this session branch, it suppose to create a new game instance for each user.
-// It works for the react build version, but not the react dev version.
-// Also deploying on render success but got 500.
-
-{/* <p>High score list:</p>
-<table>
-	<tbody>
-		{bestList.map((item) => (
-			<tr key={item.id}>
-				<td>{item.score}</td>
-				<td>{item.name}</td>
-			</tr>
-		))}
-	</tbody>
-</table> */}
