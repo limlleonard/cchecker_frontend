@@ -33,7 +33,6 @@ function App() {
 	const [arrValid, setArrValid] = useState<[number,number][]>([]);
 	const [turnwise, setTurnwise] = useState<number>(0);
 	const [nrPlayer, setNrPlayer] = useState<number>(1);
-    const [bestList, setBestList] = useState<ModelScore[]>([]);
 	const [aktiv, setAktiv] = useState<boolean>(false); // if a game is running
 
     const initialRoomNr = Math.floor(Math.random() * 100); // Generate random number between 0-9
@@ -41,18 +40,8 @@ function App() {
     const [roomnrShow, setRoomnrShow] = useState<string>(initialRoomNr.toString());
 
 	const [wsGame1, setWsGame1] = useState<WebSocket | null>(null);
-	// const formatTime = (seconds: number) => {
-	// 	const minutes = Math.floor(seconds / 60);
-	// 	const remainingSeconds = seconds % 60;
-	// 	return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
-	// };
 
 	const starten = async () => {
-		// if (timerInterval) return;
-		// const interval = setInterval(() => {
-		// 	setSeconds((prev) => prev + 1);
-		// }, 1000);
-		// setTimerInterval(interval);
 		try {
 			const response = await fetch(`${url0}starten/`, {
 				method: "POST",
@@ -60,9 +49,6 @@ function App() {
 				body: JSON.stringify({ nrPlayer, roomnr }),
 			});
 			const data = await response.json();
-			// if (data.exist) {
-			// 	alert("The room is taken, please choose another room number");
-			// } else {
 			const llPiece: [number, number][][] = data.ll_piece;
 			setAAFigur(llPiece);
 			setAktiv(true);
@@ -87,8 +73,8 @@ function App() {
 			} else {
 				setAAFigur(data.ll_piece);
 				setTurnwise(data.turnwise);
+				setMovenr(data.movenr);
 				setAktiv(true);
-				// also update selected and available pos incase someone stop if after selecting piece
 			}
 			initSocket();
 		} catch (err) {
@@ -96,9 +82,6 @@ function App() {
 		}
 	};
 	const reset = async () => {
-		// if (timerInterval) clearInterval(timerInterval);
-		// setTimerInterval(null);
-		// setSeconds(0);
 		setMovenr(0);
 		setTurnwise(0);
 
@@ -121,7 +104,6 @@ function App() {
 		const tempRoomnr:number=Math.floor(Math.random() * 100);
 		setRoomnrShow(tempRoomnr.toString());
 		setRoomnr(tempRoomnr);
-		// run a random for roomnr, delete the old instance in dct_game in backend
 	};
 	const ward = async (direction:boolean) => {
 		try {
@@ -137,9 +119,6 @@ function App() {
 		} catch (err) {
 			console.error("Error ward:", err);
 		}
-		// const tempRoomnr:number=Math.floor(Math.random() * 100);
-		// setRoomnrShow(tempRoomnr.toString());
-		// setRoomnr(tempRoomnr);
 	};
 	const initBoard1 = async () => {
 		try {
@@ -159,54 +138,6 @@ function App() {
 			console.error("Error init board:", err);
 		}
 	};
-    const fetchScores = () => {
-        fetch(`${url0}get_score/`)
-            .then((response) => response.json())
-            .then((apiData: ModelScore[]) => {
-                const filledData = [
-                    ...apiData,
-                    ...Array.from({ length: Math.max(0, 5 - apiData.length) }, () => ({
-                        id: Math.random(),
-                        score: '---',
-                        name: '----------',
-                    })),
-                ];
-                setBestList(filledData);
-            })
-            .catch((error) => console.error('Error fetching data:', error));
-    };
-    const handleNewScore = (newScore: number) => {
-        // Find the highest score in the array
-        const scores = bestList
-            .map((item) => (typeof item.score === 'number' ? item.score : -Infinity))
-            .filter((score) => score !== -Infinity);
-        const highestScore = scores.length > 0 ? Math.max(...scores) : -Infinity;
-
-        if (newScore < highestScore || scores.length<5 ) {
-            const name = prompt('Congratulations! Would you like to leave your name on the ranking:')?.trim();
-            if (name && name.length <= 20) {
-                fetch(`${url0}add_score/`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ score: newScore, name }),
-                })
-                    .then((response) => {
-                        if (!response.ok) {
-                            throw new Error('Failed to add score');
-                        }
-                        return response.json();
-                    })
-                    .then(() => {
-                        alert('Score added successfully!');
-                        fetchScores(); // Refresh the scores
-                    })
-                    .catch((error) => {
-                        console.error('Error adding score:', error);
-                        alert('Error adding score. Please try again.');
-                    });
-            }
-        }
-    };
 	const roomInfo = async () => {
 		try {
 			const response = await fetch(`${url0}room_info/`, {
@@ -223,10 +154,6 @@ function App() {
 		}
 	}
 	const test1 = async () => {
-		// const score = parseInt(prompt('Enter a new score:') || '', 10);
-		// if (!isNaN(score)) {
-		// 	handleNewScore(score);
-		// }
 		alert("Du bist aber neugierig ;)")
 	}
 	const handleBoardClick = async (coords: { x: number; y: number }) => {
@@ -252,7 +179,6 @@ function App() {
 	}
 	useEffect(() => {
 		initBoard1();
-		fetchScores();
 
 		if (wsGame1) {
 			wsGame1.onmessage = (event) => {
@@ -280,9 +206,9 @@ function App() {
 				// setMovenr((prev) => prev+1);
 				setMovenr(data.movenr)
 				setTurnwise(data.turnwise)
-				if (data.gewonnen) {
-					handleNewScore(movenr)
-					setAktiv(false)
+				if (data.win>0) {
+					// setAktiv(false)
+					alert(`Player ${data.win} wins!`)
 				};
 			}
 		};
@@ -319,8 +245,8 @@ function App() {
 				</div>
 				<div id="ctn-btn">
 					<button onClick={starten} title="Start a new game">Start</button>
-					<button onClick={reset} title="Reset the game">Reset</button>
 					<button onClick={loadJoin} title="Reload the saved game or join a game">Load / Join</button>
+					<button onClick={reset} title="Reset the game">Reset</button>
 					<button onClick={roomInfo} title="Get room information from the backend">Room Info</button>
 					<button onClick={()=>ward(false)} title="Backward">{"<<<"}</button>
 					<button onClick={()=>ward(true)} title="Forward">{">>>"}</button>
