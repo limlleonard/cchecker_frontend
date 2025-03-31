@@ -8,19 +8,11 @@ let url0ws='';
 if (window.location.protocol === 'http:') {
     url0 = 'http://127.0.0.1:8000/'
 	url0ws = 'ws://127.0.0.1:8000/'
-} else if (window.location.hostname === 'cchecker-frontend.onrender.com') {
-    url0 = 'https://cchecker-backend.onrender.com/';
-    url0ws = 'wss://cchecker-backend.onrender.com/';
-} else if (window.location.hostname === 'cchecker-frontend-docker.onrender.com') {
-    url0 = 'https://cchecker-backend-docker.onrender.com/';
-    url0ws = 'wss://cchecker-backend-docker.onrender.com/';
-} else { alert("unknown host") }
-
-interface ModelScore {
-    id: number;
-    score: number | string;
-    name: string;
+} else {
+	url0=`https://${window.location.hostname.replace("frontend","backend")}/`
+	url0ws=`wss://${window.location.hostname.replace("frontend","backend")}/`
 }
+
 function App() {
 	// const [count, setCount] = useState(0)
 	// const timerRef = useRef<HTMLDivElement>(null);
