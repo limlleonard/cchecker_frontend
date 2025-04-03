@@ -4,13 +4,13 @@ import Board from './Board';
 
 // const devMode=import.meta.env.MODE==='development'
 let url0 = '';
-let url0ws='';
+let url0ws = '';
 if (window.location.protocol === 'http:') {
-    url0 = 'http://127.0.0.1:8000/'
+	url0 = 'http://127.0.0.1:8000/'
 	url0ws = 'ws://127.0.0.1:8000/'
 } else {
-	url0=`https://${window.location.hostname.replace("frontend","backend")}/`
-	url0ws=`wss://${window.location.hostname.replace("frontend","backend")}/`
+	url0 = `https://${window.location.hostname.replace("frontend", "backend")}/`
+	url0ws = `wss://${window.location.hostname.replace("frontend", "backend")}/`
 }
 
 function App() {
@@ -20,16 +20,16 @@ function App() {
 	// const [seconds, setSeconds] = useState(0);
 	// const [timerInterval, setTimerInterval] = useState<number | null>(null);
 	const [selected, setSelected] = useState<[number, number] | null>(null);
-	const [arrCircle, setArrCircle] = useState<[number,number][]>([]);
-	const [aaFigur, setAAFigur] = useState<[number,number][][]>([]); // array of array of figur
-	const [arrValid, setArrValid] = useState<[number,number][]>([]);
+	const [arrCircle, setArrCircle] = useState<[number, number][]>([]);
+	const [aaFigur, setAAFigur] = useState<[number, number][][]>([]); // array of array of figur
+	const [arrValid, setArrValid] = useState<[number, number][]>([]);
 	const [turnwise, setTurnwise] = useState<number>(0);
 	const [nrPlayer, setNrPlayer] = useState<number>(1);
 	const [aktiv, setAktiv] = useState<boolean>(false); // if a game is running
 
-    const initialRoomNr = Math.floor(Math.random() * 100); // Generate random number between 0-9
-    const [roomnr, setRoomnr] = useState<number>(initialRoomNr);
-    const [roomnrShow, setRoomnrShow] = useState<string>(initialRoomNr.toString());
+	const initialRoomNr = Math.floor(Math.random() * 100); // Generate random number between 0-9
+	const [roomnr, setRoomnr] = useState<number>(initialRoomNr);
+	const [roomnrShow, setRoomnrShow] = useState<string>(initialRoomNr.toString());
 
 	const [wsGame1, setWsGame1] = useState<WebSocket | null>(null);
 
@@ -37,7 +37,7 @@ function App() {
 		try {
 			const response = await fetch(`${url0}starten/`, {
 				method: "POST",
-				headers: {"Content-Type": "application/json",},
+				headers: { "Content-Type": "application/json", },
 				body: JSON.stringify({ nrPlayer, roomnr }),
 			});
 			const data = await response.json();
@@ -85,7 +85,7 @@ function App() {
 		try {
 			const response = await fetch(`${url0}reset/`, {
 				method: "POST",
-				headers: {"Content-Type": "application/json",},
+				headers: { "Content-Type": "application/json", },
 				body: JSON.stringify({ roomnr }),
 			});
 			const data = await response.json();
@@ -93,16 +93,16 @@ function App() {
 		} catch (err) {
 			console.error("Error reset:", err);
 		}
-		const tempRoomnr:number=Math.floor(Math.random() * 100);
+		const tempRoomnr: number = Math.floor(Math.random() * 100);
 		setRoomnrShow(tempRoomnr.toString());
 		setRoomnr(tempRoomnr);
 	};
-	const ward = async (direction:boolean) => {
+	const ward = async (direction: boolean) => {
 		try {
 			const response = await fetch(`${url0}ward/`, {
 				method: "POST",
-				headers: {"Content-Type": "application/json",},
-				body: JSON.stringify({ direction, roomnr, movenr}),
+				headers: { "Content-Type": "application/json", },
+				body: JSON.stringify({ direction, roomnr, movenr }),
 			});
 			const data = await response.json();
 			if (data.moved) {
@@ -123,8 +123,8 @@ function App() {
 				throw new Error("Received non-JSON response");
 			}
 			const lstBoard: [number, number][] = await response.json();
-			const lstBoardRound:[number, number][]= lstBoard.map(
-				([x, y]:[number, number]) => [Math.round(x), Math.round(y)]);
+			const lstBoardRound: [number, number][] = lstBoard.map(
+				([x, y]: [number, number]) => [Math.round(x), Math.round(y)]);
 			setArrCircle(lstBoardRound);
 		} catch (err) {
 			console.error("Error init board:", err);
@@ -149,9 +149,9 @@ function App() {
 		alert("Du bist aber neugierig ;)")
 	}
 	const handleBoardClick = async (coords: { x: number; y: number }) => {
-		if (!aktiv) return 
-		const xr=coords.x;
-		const yr=coords.y;
+		if (!aktiv) return
+		const xr = coords.x;
+		const yr = coords.y;
 		try {
 			const response = await fetch(`${url0}klicken/`, {
 				method: "POST",
@@ -189,7 +189,7 @@ function App() {
 		newWs.onmessage = (event) => {
 			const data = JSON.parse(event.data); // Convert JSON string to an object
 			setSelected(null);
-			if (data.selected.length>0) {
+			if (data.selected.length > 0) {
 				setSelected([data.selected[0], data.selected[1]]);
 			}
 			setArrValid(data.valid_pos);
@@ -198,7 +198,7 @@ function App() {
 				// setMovenr((prev) => prev+1);
 				setMovenr(data.movenr)
 				setTurnwise(data.turnwise)
-				if (data.win>0) {
+				if (data.win > 0) {
 					// setAktiv(false)
 					alert(`Player ${data.win} wins!`)
 				};
@@ -213,53 +213,53 @@ function App() {
 
 	return (
 		<>
-		<div className="ctn0">
-			<section className="side-bar">
-				<h1>Chinese Checker</h1>
-				<div className="ctn-select">
-					<label htmlFor="nrPlayer">Nr of players: </label>
-					<select name="nrPlayer" id="nrPlayer" onChange={handleSelect} value={nrPlayer}>
-						<option value="1">1</option>
-						<option value="2">2</option>
-						<option value="3">3</option>
-					</select>
-				</div>
-				<div className="ctn-input">
-					<label htmlFor="roomnr">Room number: </label>
-					<input
-						type="text"
-						id="roomnr"
-						name="roomnr"
-						value={roomnrShow}
-						onChange={(e) => setRoomnrShow(e.target.value)}
-						onBlur={(e) => setRoomnr(Number(e.target.value) || 0)}
-					/>
-				</div>
-				<div id="ctn-btn">
-					<button onClick={starten} title="Start a new game">Start</button>
-					<button onClick={loadJoin} title="Reload the saved game or join a game">Load / Join</button>
-					<button onClick={reset} title="Reset the game">Reset</button>
-					<button onClick={roomInfo} title="Get room information from the backend">Room Info</button>
-					<button onClick={()=>ward(false)} title="Backward">{"<<<"}</button>
-					<button onClick={()=>ward(true)} title="Forward">{">>>"}</button>
-				</div>
-				{/* <p>Timer: <span id="timer" ref={timerRef}>{formatTime(seconds)}</span></p> */}
-				<p>Number of moves: <span id="nrMoves">{movenr}</span></p>
-				<p>Player in turn: <span className={`circleSmall farbe${turnwise}`}></span></p>
-				<a href="https://github.com/limlleonard/cchecker_frontend" target="_blank">Link to source code</a>
-				<br />
-				<button onClick={test1}>Test1</button>
+			<div className="ctn0">
+				<section className="side-bar">
+					<h1>Chinese Checker</h1>
+					<div className="ctn-select">
+						<label htmlFor="nrPlayer">Nr of players: </label>
+						<select name="nrPlayer" id="nrPlayer" onChange={handleSelect} value={nrPlayer}>
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+						</select>
+					</div>
+					<div className="ctn-input">
+						<label htmlFor="roomnr">Room number: </label>
+						<input
+							type="text"
+							id="roomnr"
+							name="roomnr"
+							value={roomnrShow}
+							onChange={(e) => setRoomnrShow(e.target.value)}
+							onBlur={(e) => setRoomnr(Number(e.target.value) || 0)}
+						/>
+					</div>
+					<div id="ctn-btn">
+						<button onClick={starten} title="Start a new game">Start</button>
+						<button onClick={loadJoin} title="Reload the saved game or join a game">Load / Join</button>
+						<button onClick={reset} title="Reset the game">Reset</button>
+						<button onClick={roomInfo} title="Get room information from the backend">Room Info</button>
+						<button onClick={() => ward(false)} title="Backward">{"<<<"}</button>
+						<button onClick={() => ward(true)} title="Forward">{">>>"}</button>
+					</div>
+					{/* <p>Timer: <span id="timer" ref={timerRef}>{formatTime(seconds)}</span></p> */}
+					<p>Number of moves: <span id="nrMoves">{movenr}</span></p>
+					<p>Player in turn: <span className={`circleSmall farbe${turnwise}`}></span></p>
+					<a href="https://github.com/limlleonard/cchecker_frontend" target="_blank">Link to source code</a>
+					<br />
+					<button onClick={test1}>Test1</button>
 
-			</section>
-			<Board
-				arrCircle={arrCircle}
-				aaFigur={aaFigur}
-				arrValid={arrValid}
-				selected={selected}
-				order={turnwise}
-				onBoardClick={handleBoardClick}
-			/>
-		</div>
+				</section>
+				<Board
+					arrCircle={arrCircle}
+					aaFigur={aaFigur}
+					arrValid={arrValid}
+					selected={selected}
+					turnwise={turnwise}
+					onBoardClick={handleBoardClick}
+				/>
+			</div>
 		</>
 	)
 }
