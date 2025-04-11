@@ -1,12 +1,13 @@
 #root {
-	max-width: 1280px;
-	margin: 0 auto;
-	/* padding: 2rem; */
-	color:black;
+    max-width: 1280px;
+    margin: 0 auto;
+    /* padding: 2rem; */
+    color: black;
     font-family: sans-serif;
-	font-size: 1.2em;
+    font-size: 1.2em;
     /* border: 2px solid red; */
 }
+
 * {
     margin: 0;
     padding: 0;
@@ -29,60 +30,40 @@
     padding: 30px;
     max-width: 1050px;
 }
+
 .side-bar {
     width: 320px;
     height: 720px;
     background-color: #888;
     padding: 1em;
 }
-.side-bar>*{
+
+.side-bar>* {
     margin-bottom: 0.4em;
 }
+
 h1 {
     text-align: center;
     font-size: 26px;
 }
-.ctn-select select {
-    font-size: 1em;
-    width: 3em;
-    text-align: center;
-    background-color: #666;
-}
-.ctn-input {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 5px;
-}
-.ctn-input input {
-    font-size: 1em;
-    width: 100%;
-    padding: 0 0.3em;
-    background-color: #666;
-    text-align: right;
-}
-#ctn-btn {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Two buttons per row */
-    gap: 0.5em;
-}
-#ctn-btn button {
-    /* flex: 1; */
-    padding: 0.3em 0.5em;
-    font-size: 1em;
-}
+
 .circleSmall {
     display: inline-block;
     width: 1em;
     height: 1em;
     border-radius: 50%;
-    vertical-align: middle; /* Aligns with the text */
+    vertical-align: middle;
+    /* Aligns with the text */
 }
-a  {
+
+a {
     color: darkblue;
 }
+
 a:hover {
     color: lightblue;
 }
+
 /* table, td {
     border: 1px solid;
 } */
@@ -90,51 +71,11 @@ table {
     width: 100%;
     border-collapse: collapse;
 }
+
 td {
     padding: 0 15px 2px 0;
 }
+
 td:first-child {
     width: 20px;
-}
-
-#board {
-    position: relative;
-    width: 720px;
-    height: 720px;
-    background-color: #888;
-}
-
-.circle {
-    position: absolute;
-    width: var(--diameterField);
-    height: var(--diameterField);
-    border-radius: 50%;
-    background-color: lightgray;
-}
-.valid {
-    background-color: gray;
-    cursor: pointer;
-    z-index: 1;
-}
-.piece {
-    cursor: pointer;
-    z-index: 2;
-}
-.farbe0 { background-color: red; }
-.farbe1 { background-color: yellow; }
-.farbe2 { background-color: green; }
-@keyframes pulse {
-    0% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.2); /* Expand */
-    }
-    100% {
-        transform: scale(1); /* Shrink back */
-    }
-}
-.piece.selected {
-    animation: pulse 1s infinite; /* Animate in a 1-second rhythm */
-    z-index: 3;
 }

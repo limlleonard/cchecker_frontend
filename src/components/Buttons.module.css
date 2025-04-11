@@ -1,0 +1,12 @@
+#ctn-btn {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    /* Two buttons per row */
+    gap: 0.5em;
+}
+
+#ctn-btn button {
+    /* flex: 1; */
+    padding: 0.3em 0.5em;
+    font-size: 1em;
+}

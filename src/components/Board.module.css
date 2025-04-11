@@ -1,0 +1,64 @@
+.spindown {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.board {
+    position: relative;
+    width: 720px;
+    height: 720px;
+    background-color: #888;
+}
+
+.circle {
+    position: absolute;
+    width: var(--diameterField);
+    height: var(--diameterField);
+    border-radius: 50%;
+    background-color: lightgray;
+}
+
+.valid {
+    background-color: gray;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.piece {
+    cursor: pointer;
+    z-index: 2;
+}
+
+.farbe0 {
+    background-color: red;
+}
+
+.farbe1 {
+    background-color: yellow;
+}
+
+.farbe2 {
+    background-color: green;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+        /* Expand */
+    }
+
+    100% {
+        transform: scale(1);
+        /* Shrink back */
+    }
+}
+
+.piece.selected {
+    animation: pulse 1s infinite;
+    /* Animate in a 1-second rhythm */
+    z-index: 3;
+}
