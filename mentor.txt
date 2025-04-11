@@ -1,0 +1,7 @@
+readme, add how to install and run code locally
+write code clear and test
+run the app as a service / background process
+error monitoring tool
+https://sentry.io/for/python/
+test failure handling
+readme db
