@@ -41,6 +41,18 @@
     background-color: green;
 }
 
+.farbe3 {
+    background-color: blue;
+}
+
+.farbe4 {
+    background-color: black;
+}
+
+.farbe5 {
+    background-color: violet;
+}
+
 @keyframes pulse {
     0% {
         transform: scale(1);

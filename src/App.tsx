@@ -205,9 +205,10 @@ function App() {
                 body: JSON.stringify({ xr, yr, roomnr }),
             });
             const data = await response.json();
+            console.log(data);
             if (wsGame1) wsGame1.send(JSON.stringify(data));
         } catch (err) {
-            console.error("Error during klicken:", err);
+            console.error("Error by klicken:", err);
         }
     };
     useEffect(() => {

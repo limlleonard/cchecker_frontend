@@ -79,3 +79,27 @@ td {
 td:first-child {
     width: 20px;
 }
+
+.farbe0 {
+    background-color: red;
+}
+
+.farbe1 {
+    background-color: yellow;
+}
+
+.farbe2 {
+    background-color: green;
+}
+
+.farbe3 {
+    background-color: blue;
+}
+
+.farbe4 {
+    background-color: black;
+}
+
+.farbe5 {
+    background-color: violet;
+}
