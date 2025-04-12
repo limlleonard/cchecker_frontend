@@ -21,6 +21,25 @@ Room info: It shows game state saved in database
 
 `>>>`: One step forward
 
+## Installation
+(You have to start both servers of frontend and backend to test the game locally)
+
+Clone the repo
+
+`https://github.com/limlleonard/cchecker_frontend.git`
+
+Install packages
+
+`cd cchecker_frontend`
+
+`npm install`
+
+Start the server
+
+`npm run dev`
+
+Open a browser and type in: http://localhost:5173/
+
 ## Features
 By using WebSocket and Djanog Channels, you could play the game with friends remotely
 
